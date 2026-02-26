@@ -1,0 +1,120 @@
+:root {
+  --senai-blue: #003366;
+  --senai-orange: #e85d04;
+  --senai-light: #f8f9fa;
+  --senai-border: #dee2e6;
+  --text: #212529;
+  --text-muted: #6c757d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  color: var(--text);
+  background: var(--senai-light);
+  line-height: 1.5;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 1.5rem 2rem;
+  }
+}
+
+a {
+  color: var(--senai-blue);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-primary {
+  background: var(--senai-orange);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #d54d03;
+}
+
+.btn-secondary {
+  background: var(--senai-blue);
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #002244;
+}
+
+.card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--senai-border);
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.grid {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.badge-draft { background: #e9ecef; color: #495057; }
+.badge-open { background: #d4edda; color: #155724; }
+.badge-submitted { background: #cce5ff; color: #004085; }
+.badge-closed { background: #f8d7da; color: #721c24; }

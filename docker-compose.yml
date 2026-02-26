@@ -1,0 +1,88 @@
+# Desenvolvimento local - Saga SENAI
+# Uso: docker-compose up -d
+
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: saga
+      POSTGRES_PASSWORD: saga_dev_secret
+      POSTGRES_DB: saga_inovacao
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U saga -d saga_inovacao"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3.12-management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: saga
+      RABBITMQ_DEFAULT_PASS: saga_dev_secret
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend (opcional no compose - pode rodar local com npm run dev)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://saga:saga_dev_secret@postgres:5432/saga_inovacao
+      REDIS_URL: redis://redis:6379
+      RABBITMQ_URL: amqp://saga:saga_dev_secret@rabbitmq:5672
+      JWT_SECRET: dev-jwt-secret-change-in-prod
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+  # Frontend (opcional - dev local geralmente preferível)
+  # frontend:
+  #   build: ./frontend
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     NEXT_PUBLIC_API_URL: http://localhost:3001
+  #   depends_on:
+  #     - backend
+
+volumes:
+  postgres_data:
+  redis_data:
+  rabbitmq_data:

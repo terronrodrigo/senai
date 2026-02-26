@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: saga-senai-config
+  namespace: saga-senai
+data:
+  NODE_ENV: "production"
+  PORT: "3001"
+  UPLOAD_MAX_SIZE: "10485760"
+  API_URL: "https://saga.senai.br"

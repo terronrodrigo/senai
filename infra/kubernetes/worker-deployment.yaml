@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: saga-worker
+  namespace: saga-senai
+  labels:
+    app: saga-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: saga-worker
+  template:
+    metadata:
+      labels:
+        app: saga-worker
+    spec:
+      containers:
+        - name: worker
+          image: saga-backend:latest
+          imagePullPolicy: IfNotPresent
+          command: ["node", "src/workers/projectProcessor.js"]
+          envFrom:
+            - configMapRef:
+                name: saga-senai-config
+            - secretRef:
+                name: saga-senai-secrets
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"

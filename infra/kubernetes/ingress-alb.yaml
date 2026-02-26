@@ -1,0 +1,32 @@
+# AWS ALB Ingress - use com ingress controller (ex.: aws-load-balancer-controller)
+# Requer anotação para ALB e certificado ACM
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: saga-senai-ingress
+  namespace: saga-senai
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/healthcheck-path: /health
+    alb.ingress.kubernetes.io/backend-protocol: HTTP
+    # alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:sa-east-1:ACCOUNT:certificate/xxx
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: saga-backend
+                port:
+                  number: 80
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: saga-frontend
+                port:
+                  number: 80

@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: saga-backend
+  namespace: saga-senai
+  labels:
+    app: saga-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: saga-backend
+  template:
+    metadata:
+      labels:
+        app: saga-backend
+    spec:
+      containers:
+        - name: backend
+          image: saga-backend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3001
+          envFrom:
+            - configMapRef:
+                name: saga-senai-config
+            - secretRef:
+                name: saga-senai-secrets
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3001
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3001
+            initialDelaySeconds: 5
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: saga-backend
+  namespace: saga-senai
+spec:
+  selector:
+    app: saga-backend
+  ports:
+    - port: 80
+      targetPort: 3001
+  type: ClusterIP
