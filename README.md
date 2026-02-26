@@ -1,5 +1,7 @@
 # Plataforma Saga SENAI de Inovação
 
+**Repositório:** [github.com/terronrodrigo/senai](https://github.com/terronrodrigo/senai)
+
 MVP da plataforma de gestão e operação da Saga SENAI de Inovação: Grand Prix, Desafio de Projetos Integradores e Inova SENAI.
 
 ## Stack
